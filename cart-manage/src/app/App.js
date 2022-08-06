@@ -14,9 +14,9 @@ function App() {
         </Routes>*/
         /*<Login/>*/
         /*<Dashboard/>*/
-        /*<User/>*/
+        <User/>
         /*<Products/>*/
-        <Cart/>
+        /*<Cart/>*/
     );
 }
 
