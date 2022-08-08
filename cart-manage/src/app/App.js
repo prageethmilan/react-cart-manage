@@ -9,14 +9,14 @@ import Cart from "../pages/Cart";
 function App() {
     return (
         /*<Routes>
-            <Route exact path='/' element={<Login/>}/>
-            <Route exact path='dashboard' element={<Dashboard />}/>
+            <Route index element={<Login/>}/>
+            <Route path="dashboard" element={<Dashboard />}/>
         </Routes>*/
         /*<Login/>*/
-        <Dashboard/>
+        /*<Dashboard/>*/
         /*<User/>*/
         /*<Products/>*/
-        /*<Cart/>*/
+        <Cart/>
     );
 }
 
