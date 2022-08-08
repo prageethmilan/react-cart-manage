@@ -13,8 +13,8 @@ function App() {
             <Route exact path='dashboard' element={<Dashboard />}/>
         </Routes>*/
         /*<Login/>*/
-        /*<Dashboard/>*/
-        <User/>
+        <Dashboard/>
+        /*<User/>*/
         /*<Products/>*/
         /*<Cart/>*/
     );

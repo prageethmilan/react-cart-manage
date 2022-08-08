@@ -14,6 +14,10 @@ import {
 } from "@mui/material";
 import GDSESnackBar from "../../Components/SnackBar";
 import UserService from "../../services/UserService";
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 class User extends Component {
@@ -40,34 +44,156 @@ class User extends Component {
                 },
                 phone: ''
             },
+            id: '',
             alert: false,
             message: '',
             severity: '',
-            btnLabel:'Save',
-            btnColor:'primary'
+            btnLabel: 'Save',
+            btnColor: 'primary',
+            data:[]
         }
     }
 
     saveUser = async () => {
         let formData = this.state.formData;
 
-        let res = await UserService.postUser(formData);
+        if (this.state.btnLabel === "Save") {
+            let res = await UserService.postUser(formData);
 
+            console.log(res);
+
+            if (res.status === 200) {
+                this.setState({
+                    alert: true,
+                    message: 'User saved successfully',
+                    severity: 'success'
+                });
+                this.clearFields();
+                await this.loadUsers();
+            } else {
+                this.setState({
+                    alert: true,
+                    message: "User not saved",
+                    severity: 'error'
+                });
+            }
+        } else {
+            let id = this.state.id;
+            let res = await UserService.putUser(formData,id);
+
+            if (res.status===200){
+                this.setState({
+                    alert:true,
+                    message:'User updated successfully',
+                    severity:'success',
+                    btnLabel:'Save',
+                    btnColor:'primary'
+                });
+                this.clearFields();
+                await this.loadUsers();
+            } else {
+                this.setState({
+                    alert:true,
+                    message:"User Not Updated",
+                    severity:'error'
+                });
+            }
+        }
+    };
+
+    loadUsers = async () => {
+        let res = await UserService.fetchUsers();
+        console.log(res.data);
+        if (res.status===200){
+            this.setState({
+                data:res.data
+            });
+        }
+        this.exampleForMap();
+    }
+
+    exampleForMap = () => {
+        this.state.data.map((value, index) => {
+            console.log(value)   // access element one by one
+        })
+    };
+
+    componentDidMount() {
+        this.loadUsers();
+    }
+
+    updateUser = (data) => {
+        this.setState({
+            btnLabel:'Update',
+            btnColor:'secondary',
+            formData:{
+                email: data.email,
+                username: data.username,
+                password: data.password,
+                name: {
+                    firstname: data.name.firstname,
+                    lastname: data.name.lastname
+                },
+                address: {
+                    city: data.address.city,
+                    street: data.address.street,
+                    number: data.address.number,
+                    zipcode: data.address.zipcode,
+                    geolocation: {
+                        lat: data.address.geolocation.lat,
+                        long: data.address.geolocation.long
+                    }
+                },
+                phone: data.phone
+            },
+            id:data.id
+        })
+    }
+
+    deleteUser = async (id) => {
+        let res = await UserService.deleteUser(id);
         console.log(res);
-
-        if (res.status === 201) {
+        if(res.status === 200) {
             this.setState({
                 alert: true,
-                message: res.data.message,
+                message: 'User deleted successfully',
                 severity: 'success'
             });
+            await this.loadUsers();
         } else {
             this.setState({
                 alert: true,
-                message: "User not saved",
+                message: 'User not deleted',
                 severity: 'error'
             });
         }
+    }
+    clearFields = () => {
+        this.setState({
+            formData: {
+                email: '',
+                username: '',
+                password: '',
+                name: {
+                    firstname: '',
+                    lastname: ''
+                },
+                address: {
+                    city: '',
+                    street: '',
+                    number: '',
+                    zipcode: '',
+                    geolocation: {
+                        lat: '',
+                        long: ''
+                    }
+                },
+                phone: ''
+            },
+            id: '',
+            btnLabel: 'Save',
+            btnColor: 'primary'
+        })
     }
 
     render() {
@@ -275,9 +401,10 @@ class User extends Component {
                     <Grid container marginTop={"10px"} direction={"row"} alignItems={"center"}
                           justifyContent={"flex-end"}>
                         <Button variant={"contained"} color={"warning"}
-                                style={{marginLeft: "10px", marginRight: "10px"}}>Clear</Button>
+                                style={{marginLeft: "10px", marginRight: "10px"}} onClick={this.clearFields}>Clear</Button>
                         <Button variant={"contained"} color={this.state.btnColor} type={"submit"}
-                                style={{marginLeft: "10px", marginRight: "10px"}} onClick={this.saveUser}>{this.state.btnLabel}</Button>
+                                style={{marginLeft: "10px", marginRight: "10px"}}
+                                >{this.state.btnLabel}</Button>
                     </Grid>
                 </ValidatorForm>
                 <Grid contaner style={{marginTop: '15px'}}>
@@ -285,6 +412,7 @@ class User extends Component {
                         <Table sx={{minWidth: 650}} aria-label="customer table">
                             <TableHead>
                                 <TableRow>
+                                    <TableCell align="left">Id</TableCell>
                                     <TableCell align="left">First Name</TableCell>
                                     <TableCell align="left">Last Name</TableCell>
                                     <TableCell align="left">Email</TableCell>
@@ -301,6 +429,47 @@ class User extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                {
+                                    this.state.data.map((row) => (
+                                        <TableRow>
+                                            <TableCell align="left">{row.id}</TableCell>
+                                            <TableCell align="left">{row.name.firstname}</TableCell>
+                                            <TableCell align="left">{row.name.lastname}</TableCell>
+                                            <TableCell align="left">{row.email}</TableCell>
+                                            <TableCell align="left">{row.username}</TableCell>
+                                            <TableCell align="left">{row.password}</TableCell>
+                                            <TableCell align="left">{row.address.city}</TableCell>
+                                            <TableCell align="left">{row.address.street}</TableCell>
+                                            <TableCell align="left">{row.address.number}</TableCell>
+                                            <TableCell align="left">{row.address.zipcode}</TableCell>
+                                            <TableCell align="left">{row.address.geolocation.lat}</TableCell>
+                                            <TableCell align="left">{row.address.geolocation.long}</TableCell>
+                                            <TableCell align="left">{row.phone}</TableCell>
+                                            <TableCell align="left">
+                                                <Tooltip title="Edit">
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            console.log("edit icon clicked!")
+                                                            this.updateUser(row);
+                                                        }}
+                                                    >
+                                                        <EditIcon color="primary" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Delete">
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            console.log("edit icon clicked!")
+                                                            this.deleteUser(row.id);
+                                                        }}
+                                                    >
+                                                        <DeleteIcon color="primary" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
 
                             </TableBody>
                         </Table>

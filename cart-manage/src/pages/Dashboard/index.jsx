@@ -2,10 +2,51 @@ import {Component} from "react";
 import {Button, Grid, Typography} from "@mui/material";
 import {withStyles} from "@mui/styles";
 import {styleSheet} from "./style";
+import ProductService from "../../services/ProductService";
+import UserService from "../../services/UserService";
+import CartService from "../../services/CartService";
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            productsCount: '0',
+            cartCount: '0',
+            userCount: '0'
+        }
+    }
+
+    getProductsCount = async () => {
+        let res = await ProductService.fetchProducts();
+        if (res.status === 200) {
+            this.setState({
+                productsCount: res.data.length
+            });
+        }
+    }
+
+    getUsersCount = async () => {
+        let res = await UserService.fetchUsers();
+        if (res.status === 200) {
+            this.setState({
+                userCount: res.data.length
+            });
+        }
+    }
+
+    getCartsCount = async () => {
+        let res = await CartService.fetchCarts();
+        if (res.status === 200) {
+            this.setState({
+                cartCount: res.data.length
+            });
+        }
+    }
+
+    componentDidMount() {
+        this.getProductsCount();
+        this.getUsersCount();
+        this.getCartsCount();
     }
 
     render() {
@@ -32,14 +73,16 @@ class Dashboard extends Component {
                           justifyContent={"center"}>
                         <div className={classes.dashContainer}>
                             <Typography variant={"h3"} textAlign={"center"} marginTop={"10px"}>Products</Typography>
-                            <Typography variant={"h1"} textAlign={"center"} marginTop={"50px"}>100</Typography>
+                            <Typography variant={"h1"} textAlign={"center"}
+                                        marginTop={"50px"}>{this.state.productsCount}</Typography>
                         </div>
                     </Grid>
                     <Grid item lg={6} md={6} xs={12} sm={12} display={"flex"} alignItems={"center"}
                           justifyContent={"center"}>
                         <div className={classes.dashContainer}>
                             <Typography variant={"h3"} textAlign={"center"} marginTop={"10px"}>Cart</Typography>
-                            <Typography variant={"h1"} textAlign={"center"} marginTop={"50px"}>50</Typography>
+                            <Typography variant={"h1"} textAlign={"center"}
+                                        marginTop={"50px"}>{this.state.cartCount}</Typography>
                         </div>
                     </Grid>
                 </Grid>
@@ -48,7 +91,8 @@ class Dashboard extends Component {
                           justifyContent={"center"}>
                         <div className={classes.dashContainer}>
                             <Typography variant={"h3"} textAlign={"center"} marginTop={"10px"}>Users</Typography>
-                            <Typography variant={"h1"} textAlign={"center"} marginTop={"50px"}>60</Typography>
+                            <Typography variant={"h1"} textAlign={"center"}
+                                        marginTop={"50px"}>{this.state.userCount}</Typography>
                         </div>
                     </Grid>
                 </Grid>
