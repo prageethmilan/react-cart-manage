@@ -3,8 +3,9 @@ import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import {withStyles} from "@mui/styles";
 import {styleSheet} from "./style";
 import {Button, Grid, Typography} from "@mui/material";
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import LoginService from "../../services/LoginService";
+import GDSESnackBar from "../../Components/SnackBar";
 
 class Login extends Component {
     constructor(props) {
@@ -13,19 +14,34 @@ class Login extends Component {
             formData: {
                 username: '',
                 password: ''
-            }
+            },
+            alert: false,
+            message: '',
+            severity: ''
         }
     }
 
     loginUser = async () => {
         let formData = this.state.formData;
         let res = await LoginService.postLogin(formData);
+
         if (res.status === 200) {
-            window.location.href = 'signup';
+            this.setState({
+                alert: true,
+                message: 'Login Successful',
+                severity: 'success'
+            })
+            window.location.href = '/dashboard';
+        } else {
+            this.setState({
+                alert: true,
+                message: res.response.data,
+                severity: 'error'
+            })
         }
     }
 
-    render(){
+    render() {
         let {classes} = this.props
         return (
             <div className={classes.loginContainer}>
@@ -84,6 +100,16 @@ class Login extends Component {
                         {/* <Link to="login">Sign Up</Link>*/}
                     </Grid>
                 </ValidatorForm>
+                <GDSESnackBar
+                    open={this.state.alert}
+                    onClose={() => {
+                        this.setState({alert: false})
+                    }}
+                    message={this.state.message}
+                    autoHideDuration={3000}
+                    severity={this.state.severity}
+                    variant="filled"
+                />
             </div>
         );
     }

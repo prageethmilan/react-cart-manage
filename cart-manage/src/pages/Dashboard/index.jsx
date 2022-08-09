@@ -65,7 +65,6 @@ class Dashboard extends Component {
                     </Grid>
                     <Grid item lg={3} md={3} sm={3} xs={3} display={"flex"} alignItems={"center"}
                           justifyContent={"flex-end"}>
-                        <Typography variant={"h6"} marginRight={"1vw"}>Name</Typography>
                         <Link to={"/"}><Button variant={"outlined"} color={"primary"} style={{margin: "1vw"}}>Log out</Button></Link>
                     </Grid>
                 </Grid>
