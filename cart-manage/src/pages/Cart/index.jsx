@@ -111,21 +111,30 @@ class Cart extends Component {
     }
 
     saveCart = async () => {
-        let formData = this.state.formData;
-        let res = await CartService.postCart(formData);
 
-        if (res.status === 200) {
-            this.setState({
-                alert: true,
-                message: 'Cart Saved Successfully',
-                severity: 'success'
-            })
-            this.clearTable();
-            this.clearFields();
+        if (this.state.formData.userId != "" && this.state.formData.products.length != 0) {
+            let formData = this.state.formData;
+            let res = await CartService.postCart(formData);
+
+            if (res.status === 200) {
+                this.setState({
+                    alert: true,
+                    message: 'Cart Saved Successfully',
+                    severity: 'success'
+                })
+                this.clearTable();
+                this.clearFields();
+            } else {
+                this.setState({
+                    alert: true,
+                    message: 'Cart Not Saved',
+                    severity: 'error'
+                })
+            }
         } else {
             this.setState({
                 alert: true,
-                message: 'Cart Not Saved',
+                message: 'Please select a username or products',
                 severity: 'error'
             })
         }
@@ -136,16 +145,9 @@ class Cart extends Component {
     }
 
     clearFields = () => {
-        this.state = ({
-            formData: {
-                userId: '',
-                date: new Date().toISOString().slice(0, 10),
-                products: []
-            },
+        this.setState = ({
             username: '',
-            product: '',
-            productId: '',
-            qty: 0
+            qty: ''
         })
     }
 
@@ -236,7 +238,7 @@ class Cart extends Component {
                                 size="small"
                                 style={{width: '100%'}}
                                 onChange={(e) => {
-                                    let qty = this.state.qty;
+                                    let qty = this.state.qty
                                     qty = e.target.value;
                                     this.state.qty = qty;
                                 }}

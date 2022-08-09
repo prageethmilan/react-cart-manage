@@ -15,8 +15,8 @@ function App() {
         /*<Login/>*/
         /*<Dashboard/>*/
         /*<User/>*/
-        /*<Products/>*/
-        <Cart/>
+        <Products/>
+        /*<Cart/>*/
     );
 }
 
