@@ -5,6 +5,7 @@ import {styleSheet} from "./style";
 import ProductService from "../../services/ProductService";
 import UserService from "../../services/UserService";
 import CartService from "../../services/CartService";
+import {Link} from "react-router-dom";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -55,16 +56,17 @@ class Dashboard extends Component {
             <>
                 <Grid container spacing={3} direction={"row"} style={{backgroundColor: "aqua"}}>
                     <Grid item lg={3} md={3} xs={3} sm={3}>
-                        <Button variant={"outlined"} color={"primary"} style={{margin: "1vw"}}>Dashboard</Button>
+                        <Link to={"/dashboard"}><Button variant={"outlined"} color={"primary"} style={{margin: "1vw"}}>Dashboard</Button></Link>
                     </Grid>
                     <Grid item lg={6} md={6} xs={6} sm={6} display={"flex"} alignItems={"center"}
                           justifyContent={"center"}>
-                        <Button variant={"contained"} color={"primary"} style={{margin: "1vw"}}>Products</Button>
-                        <Button variant={"contained"} color={"primary"} style={{margin: "1vw"}}>Cart</Button>
+                        <Link to={"/product"}><Button variant={"contained"} color={"primary"} style={{margin: "1vw"}}>Products</Button></Link>
+                        <Link to={"/cart"}><Button variant={"contained"} color={"primary"} style={{margin: "1vw"}}>Cart</Button></Link>
                     </Grid>
                     <Grid item lg={3} md={3} sm={3} xs={3} display={"flex"} alignItems={"center"}
                           justifyContent={"flex-end"}>
                         <Typography variant={"h6"} marginRight={"1vw"}>Name</Typography>
+                        <Link to={"/"}><Button variant={"outlined"} color={"primary"} style={{margin: "1vw"}}>Log out</Button></Link>
                     </Grid>
                 </Grid>
 

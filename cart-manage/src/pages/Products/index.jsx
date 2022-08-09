@@ -4,6 +4,7 @@ import {Autocomplete, Button, Grid, TextField, Typography} from "@mui/material";
 import ProductService from "../../services/ProductService";
 import GDSESnackBar from "../../Components/SnackBar";
 import $ from "jquery";
+import {Link} from "react-router-dom";
 
 class Products extends Component {
     constructor(props) {
@@ -82,8 +83,11 @@ class Products extends Component {
             <>
                 <ValidatorForm ref="form" className="pt-2" onSubmit={this.saveProduct}>
                     <Grid container className="pt-2" spacing={3}>
-                        <Grid item lg={12} xs={12} sm={12} md={12}>
+                        <Grid item lg={6} xs={6} sm={6} md={6}>
                             <Typography variant="h2" fontWeight={"bold"}>Product Manage</Typography>
+                        </Grid>
+                        <Grid item lg={6} xs={6} sm={6} md={6} display={"flex"} alignItems={"center"} justifyContent={"flex-end"}>
+                            <Link to={"/dashboard"}><Button variant={"contained"} type={"button"} color={"primary"}>Home</Button></Link>
                         </Grid>
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                             <Typography variant="subtitle1">Title</Typography>

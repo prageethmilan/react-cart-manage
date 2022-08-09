@@ -3,16 +3,16 @@ import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import {withStyles} from "@mui/styles";
 import {styleSheet} from "./style";
 import {Button, Grid, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import LoginService from "../../services/LoginService";
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            formData:{
-                username:'',
-                password:''
+            formData: {
+                username: '',
+                password: ''
             }
         }
     }
@@ -20,10 +20,12 @@ class Login extends Component {
     loginUser = async () => {
         let formData = this.state.formData;
         let res = await LoginService.postLogin(formData);
-        console.log(res);
+        if (res.status === 200) {
+            window.location.href = 'signup';
+        }
     }
 
-    render() {
+    render(){
         let {classes} = this.props
         return (
             <div className={classes.loginContainer}>
@@ -75,11 +77,11 @@ class Login extends Component {
                           justifyContent="flex-start">
                         <Typography variant="h5" style={{marginLeft: "4vw", marginTop: "11vh"}}>Create new user
                             account? </Typography>
-                        {/*<Link to="/">
+                        <Link to="signup">
                             <Button size="large" color="error" style={{marginTop: "11vh", fontSize: "larger"}}>Sign
                                 Up</Button>
-                        </Link>*/}
-                        {/*<Link to="login">Sign Up</Link>*/}
+                        </Link>
+                        {/* <Link to="login">Sign Up</Link>*/}
                     </Grid>
                 </ValidatorForm>
             </div>
