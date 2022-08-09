@@ -4,10 +4,23 @@ import {withStyles} from "@mui/styles";
 import {styleSheet} from "./style";
 import {Button, Grid, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import LoginService from "../../services/LoginService";
 
 class Login extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            formData:{
+                username:'',
+                password:''
+            }
+        }
+    }
+
+    loginUser = async () => {
+        let formData = this.state.formData;
+        let res = await LoginService.postLogin(formData);
+        console.log(res);
     }
 
     render() {
@@ -27,8 +40,13 @@ class Login extends Component {
                                 placeholder="Username"
                                 variant="outlined"
                                 size="small"
-                                validators={['required']}
-                                errorMessages={['username is not valid']}
+                                value={this.state.username}
+                                onChange={(e) => {
+                                    let formData = this.state.formData;
+                                    formData.username = e.target.value;
+                                    this.setState({formData});
+                                }}
+                                /*validators={['required']}*/
                             />
                         </Grid>
                         <Grid item lg={10} md={10} xs={10} sm={12}>
@@ -39,14 +57,19 @@ class Login extends Component {
                                 type="password"
                                 variant="outlined"
                                 size="small"
-                                validators={['required']}
-                                errorMessages={['username is not valid']}
+                                value={this.state.password}
+                                onChange={(e) => {
+                                    let formData = this.state.formData;
+                                    formData.password = e.target.value;
+                                    this.setState({formData});
+                                }}
+                                /*validators={['required']}*/
                             />
                         </Grid>
                     </Grid>
                     <Grid container style={{marginTop: "20px"}} direction="row" alignItems="center"
                           justifyContent="center">
-                        <Button variant="contained" type="submit" className="primary">Login</Button>
+                        <Button variant="contained" type={"submit"} className="primary">Login</Button>
                     </Grid>
                     <Grid container style={{marginTop: "20px"}} direction="row" alignItems="center"
                           justifyContent="flex-start">
